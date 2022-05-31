@@ -50,6 +50,45 @@
 
   outputs = { self, nixpkgs, haskell-nix, flake-compat, flake-compat-ci, digraph, tasty-hedgehog, these, indexed-traversable, assoc, lens, one-tuple, constraints, invariant-functors }:
     let
+      extraSources = [
+        {
+          src = digraph;
+          subdirs = [ "." ];
+        }
+        {
+          src = tasty-hedgehog;
+          subdirs = [ "." ];
+        }
+        {
+          src = these;
+          subdirs = [ "./these" ];
+        }
+        {
+          src = indexed-traversable;
+          subdirs = [ "indexed-traversable" "indexed-traversable-instances" ];
+        }
+        {
+          src = assoc;
+          subdirs = [ "." ];
+        }
+        {
+          src = lens;
+          subdirs = [ "." ];
+        }
+        {
+          src = one-tuple;
+          subdirs = [ "." ];
+        }
+        {
+          src = constraints;
+          subdirs = [ "." ];
+        }
+        {
+          src = invariant-functors;
+          subdirs = [ "." ];
+        }
+      ];
+
       supportedSystems =
         [ "x86_64-linux" ];
 
@@ -82,44 +121,7 @@
           src = fakeSrc.outPath;
           cabalProjectFileName = "cabal.project";
           modules = [{ packages = { }; }];
-          extraSources = [
-            {
-              src = digraph;
-              subdirs = [ "." ];
-            }
-            {
-              src = tasty-hedgehog;
-              subdirs = [ "." ];
-            }
-            {
-              src = these;
-              subdirs = [ "./these" ];
-            }
-            {
-              src = indexed-traversable;
-              subdirs = [ "indexed-traversable" "indexed-traversable-instances" ];
-            }
-            {
-              src = assoc;
-              subdirs = [ "." ];
-            }
-            {
-              src = lens;
-              subdirs = [ "." ];
-            }
-            {
-              src = one-tuple;
-              subdirs = [ "." ];
-            }
-            {
-              src = constraints;
-              subdirs = [ "." ];
-            }
-            {
-              src = invariant-functors;
-              subdirs = [ "." ];
-            }
-          ];
+          extraSources = extraSources;
           shell = {
             withHoogle = true;
 
@@ -172,6 +174,8 @@
         '';
     in
     {
+      inherit extraSources;
+
       project = perSystem projectFor;
       flake = perSystem (system: (projectFor system).flake { });
 
