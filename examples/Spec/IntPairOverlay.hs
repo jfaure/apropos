@@ -7,7 +7,7 @@ import Apropos
 import Control.Lens.Tuple (_1, _2)
 import Spec.IntOverlay
 import Test.Tasty (TestTree, testGroup)
-import Test.Tasty.Hedgehog (fromGroup, testProperty)
+import Test.Tasty.Hedgehog (fromGroup, testPropertyNamed)
 
 data PairSmpl = BothNonNeg
   deriving stock (Eq, Ord, Show, Generic)
@@ -72,6 +72,6 @@ smplPairTests =
   testGroup
     "smplPairTests"
     [ fromGroup $ permutationGeneratorSelfTest @PairOfSmpl
-    , testProperty "overlay is sound" $ soundOverlay @PairSmpl
+    , testPropertyNamed "overlay is sound" "soundOverlay" $ soundOverlay @PairSmpl
     , fromGroup $ permutationGeneratorSelfTest @PairSmpl
     ]

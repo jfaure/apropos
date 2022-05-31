@@ -2,7 +2,7 @@
   description = "apropos";
 
   inputs = {
-    haskell-nix.url = "github:input-output-hk/haskell.nix";
+    haskell-nix.url = "github:mlabs-haskell/haskell.nix";
     nixpkgs.follows = "haskell-nix/nixpkgs-unstable";
     haskell-nix.inputs.nixpkgs.follows = "haskell-nix/nixpkgs-2105";
     flake-compat-ci.url = "github:hercules-ci/flake-compat-ci";
@@ -10,9 +10,45 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    digraph = {
+      url = "github:t4ccer/digraph?ref=t4/ghc9";
+      flake = false;
+    };
+    tasty-hedgehog = {
+      url = "github:qfpl/tasty-hedgehog?ref=1.2.0.0";
+      flake = false;
+    };
+    these = {
+      url = "github:haskellari/these?ref=v1.1.1.1";
+      flake = false;
+    };
+    indexed-traversable = {
+      url = "github:haskellari/indexed-traversable/ghc-9.2a";
+      flake = false;
+    };
+    assoc = {
+      url = "github:haskellari/assoc/28cdc11e50a606ba1356976438b5ca0ad1ffe197";
+      flake = false;
+    };
+    lens = {
+      url = "github:ekmett/lens?ref=v5.1.1";
+      flake = false;
+    };
+    one-tuple = {
+      url = "github:haskellari/OneTuple?ref=v0.3.1";
+      flake = false;
+    };
+    constraints = {
+      url = "github:ekmett/constraints?ref=v0.13.4";
+      flake = false;
+    };
+    invariant-functors = {
+      url = "github:nfrisby/invariant-functors?ref=0.5.6";
+      flake = false;
+    };
   };
 
-  outputs = { self, nixpkgs, haskell-nix, flake-compat, flake-compat-ci }:
+  outputs = { self, nixpkgs, haskell-nix, flake-compat, flake-compat-ci, digraph, tasty-hedgehog, these, indexed-traversable, assoc, lens, one-tuple, constraints, invariant-functors }:
     let
       supportedSystems =
         [ "x86_64-linux" ];
@@ -27,9 +63,9 @@
         };
       nixpkgsFor' = system: import nixpkgs { inherit system; };
 
-      compiler-nix-name = "ghc8107";
+      compiler-nix-name = "ghc921";
 
-      fourmoluFor = system: (nixpkgsFor system).haskell-nix.tool "ghc921" "fourmolu" { };
+      # fourmoluFor = system: (nixpkgsFor system).haskell-nix.tool "ghc921" "fourmolu" { };
 
       projectFor = system:
         let
@@ -46,10 +82,48 @@
           src = fakeSrc.outPath;
           cabalProjectFileName = "cabal.project";
           modules = [{ packages = { }; }];
+          extraSources = [
+            {
+              src = digraph;
+              subdirs = [ "." ];
+            }
+            {
+              src = tasty-hedgehog;
+              subdirs = [ "." ];
+            }
+            {
+              src = these;
+              subdirs = [ "./these" ];
+            }
+            {
+              src = indexed-traversable;
+              subdirs = [ "indexed-traversable" "indexed-traversable-instances" ];
+            }
+            {
+              src = assoc;
+              subdirs = [ "." ];
+            }
+            {
+              src = lens;
+              subdirs = [ "." ];
+            }
+            {
+              src = one-tuple;
+              subdirs = [ "." ];
+            }
+            {
+              src = constraints;
+              subdirs = [ "." ];
+            }
+            {
+              src = invariant-functors;
+              subdirs = [ "." ];
+            }
+          ];
           shell = {
             withHoogle = true;
 
-            tools.haskell-language-server = { };
+            # tools.haskell-language-server = { };
 
             exactDeps = true;
 
@@ -59,7 +133,7 @@
               [
                 pkgs.cabal-install
                 pkgs.hlint
-                (fourmoluFor system)
+                # (fourmoluFor system)
                 pkgs.nixpkgs-fmt
                 pkgs.haskellPackages.cabal-fmt
                 pkgs.haskellPackages.apply-refact
@@ -67,11 +141,16 @@
               ];
             additional = ps: [
               ps.digraph
+              ps.tasty-hedgehog
+              ps.these
+              ps.indexed-traversable
+              ps.indexed-traversable-instances
+              ps.assoc
+              ps.lens
+              ps.OneTuple
+              ps.constraints
+              ps.invariant
             ];
-          };
-          sha256map = {
-            "https://github.com/Geometer1729/digraph"."d4dfec22f6a6eb646dcfa9591eaca0a9be88d260" = "sha256-ytQkJ18tYs13rt66s4jdbaGa5mLNEIerF8u24PvyPLA=";
-
           };
         };
 
