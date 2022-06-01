@@ -63,7 +63,7 @@ common lang
 
 
   ghc-options:
-    -Wall -Wcompat -Wincomplete-uni-patterns -Wredundant-constraints
+    -Wall -Wcompat -Wincomplete-uni-patterns -Wno-redundant-constraints
     -Wmissing-export-lists -Wincomplete-record-updates
     -Wmissing-deriving-strategies -ddump-splices
 
