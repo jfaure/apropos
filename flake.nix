@@ -2,7 +2,7 @@
   description = "apropos";
 
   inputs = {
-    haskell-nix.url = "github:mlabs-haskell/haskell.nix";
+    haskell-nix.url = "github:t4ccer/haskell.nix?ref=t4/ghc9-fix";
     nixpkgs.follows = "haskell-nix/nixpkgs-unstable";
     haskell-nix.inputs.nixpkgs.follows = "haskell-nix/nixpkgs-2105";
     flake-compat-ci.url = "github:hercules-ci/flake-compat-ci";
@@ -104,7 +104,7 @@
 
       compiler-nix-name = "ghc921";
 
-      # fourmoluFor = system: (nixpkgsFor system).haskell-nix.tool "ghc921" "fourmolu" { };
+      fourmoluFor = system: (nixpkgsFor system).haskell-nix.tool "ghc921" "fourmolu" { };
 
       projectFor = system:
         let
@@ -135,7 +135,7 @@
               [
                 pkgs.cabal-install
                 pkgs.hlint
-                # (fourmoluFor system)
+                (fourmoluFor system)
                 pkgs.nixpkgs-fmt
                 pkgs.haskellPackages.cabal-fmt
                 pkgs.haskellPackages.apply-refact
