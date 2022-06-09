@@ -10,10 +10,6 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
-    digraph = {
-      url = "github:t4ccer/digraph?ref=t4/ghc9";
-      flake = false;
-    };
     tasty-hedgehog = {
       url = "github:qfpl/tasty-hedgehog?ref=1.2.0.0";
       flake = false;
@@ -48,13 +44,9 @@
     };
   };
 
-  outputs = { self, nixpkgs, haskell-nix, flake-compat, flake-compat-ci, digraph, tasty-hedgehog, these, indexed-traversable, assoc, lens, one-tuple, constraints, invariant-functors }:
+  outputs = { self, nixpkgs, haskell-nix, flake-compat, flake-compat-ci, tasty-hedgehog, these, indexed-traversable, assoc, lens, one-tuple, constraints, invariant-functors }:
     let
       extraSources = [
-        {
-          src = digraph;
-          subdirs = [ "." ];
-        }
         {
           src = tasty-hedgehog;
           subdirs = [ "." ];
@@ -142,7 +134,6 @@
                 pkgs.fd
               ];
             additional = ps: [
-              ps.digraph
               ps.tasty-hedgehog
               ps.these
               ps.indexed-traversable
